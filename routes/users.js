@@ -1,3 +1,5 @@
+const routerUser = require('express').Router();
+
 const users = require('../data/users');
 
 const getUsers = (req, res) => {
@@ -6,7 +8,7 @@ const getUsers = (req, res) => {
 
 const getUser = (req, res) => {
   const { id } = req.params;
-  const user = users.find((user) => user._id === id);
+  const user = users.find((item) => item._id === id);
   if (!user) {
     res.status(404).send({ message: 'Нет пользователя с таким id' });
     return;
@@ -14,4 +16,7 @@ const getUser = (req, res) => {
   res.send(user);
 };
 
-module.exports = { getUsers, getUser };
+routerUser.get('/users/:id', getUser);
+routerUser.get('/users', getUsers);
+
+module.exports = routerUser;
