@@ -11,12 +11,16 @@
   "author": "Dmitry Volodin",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1"
+    "body-parser": "^1.19.0",
+    "celebrate": "^11.0.1",
+    "express": "^4.17.1",
+    "mongoose": "^5.8.11",
+    "validator": "^12.2.0"
   },
   "devDependencies": {
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-import": "^2.20.1",
     "nodemon": "^2.0.2"
   },
   "repository": {
