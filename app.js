@@ -16,7 +16,8 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useFindAndModify: false,
 });
 
-app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json()); // c этим и так body не пустой, у нас же формат application/json, а не application/x-www-form-urlencoded
 app.use(router);
 app.use(errors());
 
