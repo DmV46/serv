@@ -19,8 +19,8 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 // app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json()); // c этим и так body не пустой, у нас же формат application/json, а не application/x-www-form-urlencoded
 app.use(router);
-app.use(errors());
 
+app.use(errors());
 // Централизованный обработчик ошибок
 app.use(errorHandler);
 
