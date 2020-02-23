@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const uniqueValidator = require('mongoose-unique-validator');
+const bcyrpt = require('bcryptjs');
 
-const { INVALID_LINK } = require('../configuration/constants');
+const { INVALID_LINK, INVALID_MAIL } = require('../configuration/constants');
 
 
 const userSchema = new mongoose.Schema({
@@ -20,17 +22,50 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
     required: true,
-    // validate: {
-    //   validator: () => validator.isURL, INVALID_LINK,
-    // },
+    validate: {
+      validator: (v) => validator.isURL(v),
+      message: INVALID_LINK,
+    },
+  },
+  email: {
+    type: String,
+    unique: true,
+    required: true,
+    validate: {
+      validator: (v) => validator.isEmail(v),
+      message: INVALID_MAIL,
+    },
+  },
+  password: {
+    type: String,
+    required: true,
+    minlength: 8,
+    select: false,
   },
 });
 
-userSchema.path('avatar').validate(validator.isURL, INVALID_LINK);
+userSchema.plugin(uniqueValidator);
 
 userSchema.pre('findOneAndUpdate', function (next) {
   this.options.runValidators = true;
   next();
 });
+
+userSchema.statics.findUserByCredentials = function (email, password) {
+  return this.findOne({ email }).select('+password')
+    .then((user) => {
+      if (!user) {
+        return Promise.reject(new Error('Неправильная почта или пароль'));
+      }
+
+      return bcyrpt.compare(password, user.password)
+        .then((matched) => {
+          if (!matched) {
+            return Promise.reject(new Error('Неправильная почта или пароль'));
+          }
+          return user;
+        });
+    });
+};
 
 module.exports = mongoose.model('user', userSchema);
