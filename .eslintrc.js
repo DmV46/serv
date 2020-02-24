@@ -6,7 +6,9 @@ module.exports = {
     "es6": true
   },
   "rules": {
-
+    "no-underscore-dangle": "off", // для _id
+    "no-useless-escape": "off",
+    "max-len": "off"
   },
   "extends": "airbnb-base"
 }

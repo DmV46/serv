@@ -1,22 +1,18 @@
 const routerUser = require('express').Router();
 
-const users = require('../data/users');
+const auth = require('../middlewares/auth');
 
-const getUsers = (req, res) => {
-  res.send(users);
-};
+const {
+  getUsers, getUser, createUser, patchUserProfile, patchUserAvatar, login,
+} = require('../controllers/users');
 
-const getUser = (req, res) => {
-  const { id } = req.params;
-  const user = users.find((item) => item._id === id);
-  if (!user) {
-    res.status(404).send({ message: 'Нет пользователя с таким id' });
-    return;
-  }
-  res.send(user);
-};
+routerUser.get('/users', auth, getUsers);
+routerUser.get('/users/:id', auth, getUser);
 
-routerUser.get('/users/:id', getUser);
-routerUser.get('/users', getUsers);
+routerUser.post('/signin', login);
+routerUser.post('/signup', createUser);
+
+routerUser.patch('/users/me', auth, patchUserProfile);
+routerUser.patch('/users/me/avatar', auth, patchUserAvatar);
 
 module.exports = routerUser;
