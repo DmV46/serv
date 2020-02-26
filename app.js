@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -16,8 +17,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useFindAndModify: false,
 });
 
-// app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json()); // c этим и так body не пустой, у нас же формат application/json, а не application/x-www-form-urlencoded
+app.use(bodyParser.json());
 app.use(router);
 
 app.use(errors());

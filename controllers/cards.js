@@ -20,9 +20,18 @@ const createCard = (req, res) => {
 };
 
 const deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.id)
+  Card.findById(req.params.id)
+    .then((card) => {
+      if (req.user._id !== card.owner._id) {
+        return Promise.reject(new Error('Отсутствуют права на редактирование!'));
+      }
+      return Card.findByIdAndRemove(req.params.id);
+    })
     .then((card) => res.send({ data: card }))
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+  // Card.findByIdAndRemove(req.params.id)
+  //   .then((card) => res.send({ data: card }))
+  //   .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 };
 
 const likeCard = (req, res) => {

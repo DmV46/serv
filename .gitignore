@@ -15,3 +15,5 @@ node_modules
 
 # Settings VSCode
 .vscode
+
+.env
