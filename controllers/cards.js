@@ -22,16 +22,18 @@ const createCard = (req, res) => {
 const deleteCard = (req, res) => {
   Card.findById(req.params.id)
     .then((card) => {
-      if (req.user._id !== card.owner._id) {
-        return Promise.reject(new Error('Отсутствуют права на редактирование!'));
+      if (!card) {
+        return res.status(404).send({ message: 'Карточка с таким id не найдена' });
       }
-      return Card.findByIdAndRemove(req.params.id);
+
+      if (!card.owner.equals(req.user_id)) {
+        return res.status(403).send({ message: 'Отсутствуют права на редактирование!' });
+      }
+
+      return Card.remove(req.params.id)
+        .then(() => res.send(card));
     })
-    .then((card) => res.send({ data: card }))
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
-  // Card.findByIdAndRemove(req.params.id)
-  //   .then((card) => res.send({ data: card }))
-  //   .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 };
 
 const likeCard = (req, res) => {
