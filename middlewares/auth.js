@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
-
-const { NODE_ENV, JWT_SECRET } = process.env;
+const { JWT_SECRET } = require('../configuration/settings');
 
 
 module.exports = (req, res, next) => {
@@ -13,7 +12,7 @@ module.exports = (req, res, next) => {
   let playload;
 
   try {
-    playload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret');
+    playload = jwt.verify(token, JWT_SECRET);
   } catch (error) {
     return res.status(401).send({ message: 'Необходима авторизация' });
   }
