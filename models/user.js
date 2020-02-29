@@ -68,4 +68,10 @@ userSchema.statics.findUserByCredentials = function (email, password) {
     });
 };
 
+userSchema.methods.omitPrivate = function omitPrivate() {
+  const data = this.toObject();
+  delete data.password;
+  return data;
+};
+
 module.exports = mongoose.model('user', userSchema);

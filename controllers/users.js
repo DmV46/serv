@@ -43,17 +43,7 @@ const createUser = (req, res) => {
     .then((hash) => User.create({
       name, about, avatar, email, password: hash,
     }))
-    .then((user) => {
-      res.status(201).send({
-        user: {
-          _id: user._id,
-          name: user.name,
-          about: user.about,
-          avatar: user.avatar,
-          email: user.email,
-        },
-      });
-    })
+    .then((user) => res.status(201).send({ data: user.omitPrivate() }))
     .catch((err) => res.status(500).send({ message: err.message }));
 };
 
