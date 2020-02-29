@@ -49,36 +49,16 @@ const createUser = (req, res) => {
 
 const patchUserProfile = (req, res) => {
   const { name, about } = req.body;
-  User.findById(req.user._id)
-    .then((user) => {
-      if (req.user._id !== user._id) {
-        return Promise.reject(new Error('Отсутствуют права на редактирование!'));
-      }
-      return User.findByIdAndRemove(req.user._id, { name, about }, { new: true });
-    })
+  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true })
     .then((user) => res.send({ data: user }))
-    .catch((err) => res.status(401).send({ message: err.message }));
-
-  // User.findByIdAndUpdate(req.user._id, { name, about }, { new: true })
-  //   .then((user) => res.send({ data: user }))
-  //   .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => res.status(500).send({ message: err.message }));
 };
 
 const patchUserAvatar = (req, res) => {
   const { avatar } = req.body;
-  User.findById(req.user._id)
-    .then((user) => {
-      if (req.user._id !== user._id) {
-        return Promise.reject(new Error('Отсутствуют права на редактирование!'));
-      }
-      return User.findByIdAndUpdate(req.user._id, { avatar }, { new: true });
-    })
+  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true })
     .then((user) => res.send({ data: user }))
     .catch(() => res.status(500).send({ message: SERVER_ERROR }));
-
-  // User.findByIdAndUpdate(req.user._id, { avatar }, { new: true })
-  //   .then((user) => res.send({ data: user }))
-  //   .catch(() => res.status(500).send({ message: SERVER_ERROR }));
 };
 
 
