@@ -14,7 +14,6 @@ const login = (req, res) => {
         .cookie('jwt', token, {
           httpOnly: true,
         })
-        .status(201)
         .send({ token });
     })
     .catch((err) => {
