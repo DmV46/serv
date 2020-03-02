@@ -30,8 +30,13 @@ const getUsers = (req, res) => {
 
 const getUser = (req, res) => {
   User.findById(req.params.id)
-    .then((user) => res.send({ data: user }))
-    .catch(() => res.status(404).send({ message: ITEM_NOT_FOUND }));
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send({ message: 'Пользователь с таким id не найден' });
+      }
+      return res.send({ data: user });
+    })
+    .catch(() => res.status(500).send({ message: ITEM_NOT_FOUND }));
 };
 
 const createUser = (req, res) => {
