@@ -34,13 +34,23 @@ const deleteCard = (req, res) => {
 
 const likeCard = (req, res) => {
   Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
-    .then((card) => res.send({ data: card }))
+    .then((card) => {
+      if (!card) {
+        return res.status(404).send({ message: 'Карточка с таким id не найдена' });
+      }
+      return res.send({ data: card });
+    })
     .catch(() => res.status(500).send({ message: 'Произошла ошибка. Изменения не внесены.' }));
 };
 
 const dislikeCard = (req, res) => {
   Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
-    .then((card) => res.send({ data: card }))
+    .then((card) => {
+      if (!card) {
+        return res.status(404).send({ message: 'Карточка с таким id не найдена' });
+      }
+      return res.send({ data: card });
+    })
     .catch(() => res.status(500).send({ message: 'Произошла ошибка. Изменения не внесены.' }));
 };
 
