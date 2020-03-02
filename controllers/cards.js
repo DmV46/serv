@@ -8,13 +8,9 @@ const getCards = (req, res) => {
 };
 
 const createCard = (req, res) => {
-  const {
-    name, link, owner, likes, createAt,
-  } = req.body;
+  const { name, link } = req.body;
 
-  Card.create({
-    name, link, owner, likes, createAt,
-  })
+  Card.create({ name, link, owner: req.user })
     .then((card) => res.send({ data: card }))
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 };
