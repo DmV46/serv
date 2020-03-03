@@ -22,7 +22,7 @@ const deleteCard = (req, res) => {
         return res.status(404).send({ message: 'Карточка с таким id не найдена' });
       }
 
-      if (!card.owner.equals(req.user_id)) {
+      if (!card.owner.equals(req.user._id)) {
         return res.status(403).send({ message: 'Отсутствуют права на редактирование!' });
       }
 
@@ -33,7 +33,7 @@ const deleteCard = (req, res) => {
 };
 
 const likeCard = (req, res) => {
-  Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
+  Card.findByIdAndUpdate(req.params.id, { $addToSet: { likes: req.user._id } }, { new: true })
     .then((card) => {
       if (!card) {
         return res.status(404).send({ message: 'Карточка с таким id не найдена' });
@@ -44,7 +44,7 @@ const likeCard = (req, res) => {
 };
 
 const dislikeCard = (req, res) => {
-  Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
+  Card.findByIdAndUpdate(req.params.id, { $pull: { likes: req.user._id } }, { new: true })
     .then((card) => {
       if (!card) {
         return res.status(404).send({ message: 'Карточка с таким id не найдена' });
