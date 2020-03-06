@@ -26,7 +26,7 @@ const deleteCard = (req, res) => {
         return res.status(403).send({ message: 'Отсутствуют права на редактирование!' });
       }
 
-      return Card.remove(req.params.id)
+      return Card.remove(card)
         .then(() => res.send(card));
     })
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
