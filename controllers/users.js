@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { ITEM_NOT_FOUND, SERVER_ERROR } = require('../configuration/constants');
+const { NotFoundError, UnauthorizedError, ForbiddenError } = require('../errors/NotFoundError');
+const { ITEM_NOT_FOUND, UNAUTHORIZED_ERROR} = require('../configuration/constants');
 
 const { JWT_SECRET } = require('../configuration/settings');
 const User = require('../models/user');
@@ -17,26 +18,22 @@ const login = (req, res) => {
         })
         .send({ token });
     })
-    .catch((err) => {
-      res.status(401).send({ message: err.message });
-    });
+    .catch( next(new UnauthorizedError(UNAUTHORIZED_ERROR)) );
 };
 
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send(users))
-    .catch(() => res.status(500).send({ message: SERVER_ERROR }));
+    .catch(next);
 };
 
 const getUser = (req, res) => {
   User.findById(req.params.id)
-    .then((user) => {
-      if (!user) {
-        return res.status(404).send({ message: 'Пользователь с таким id не найден' });
-      }
-      return res.send({ data: user });
+    .orFail(()=>{
+      throw new NotFoundError(ITEM_NOT_FOUND);
     })
-    .catch(() => res.status(500).send({ message: ITEM_NOT_FOUND }));
+    .then((user) => res.send({ data: user }))
+    .catch(next);
 };
 
 const createUser = (req, res) => {

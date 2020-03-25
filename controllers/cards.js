@@ -1,10 +1,12 @@
 const Card = require('../models/card');
+const { NotFoundError, ForbiddenError } = require('../errors/NotFoundError');
+const { ITEM_NOT_FOUND, FORBIDDEN_ERROR } = require('../configuration/constants')
 
 const getCards = (req, res) => {
   Card.find({})
     .populate(['owner', 'likes'])
     .then((cards) => res.send({ data: cards }))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch(next);
 };
 
 const createCard = (req, res) => {
@@ -12,46 +14,43 @@ const createCard = (req, res) => {
 
   Card.create({ name, link, owner: req.user })
     .then((card) => res.send({ data: card }))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch(next);
 };
 
 const deleteCard = (req, res) => {
-  Card.findById(req.params.id)
+  const { id } = req.params;
+  Card.findById({ _id: id })
     .then((card) => {
       if (!card) {
-        return res.status(404).send({ message: 'Карточка с таким id не найдена' });
+        throw new NotFoundError(ITEM_NOT_FOUND);
       }
 
       if (!card.owner.equals(req.user._id)) {
-        return res.status(403).send({ message: 'Отсутствуют права на редактирование!' });
+        throw new ForbiddenError(FORBIDDEN_ERROR);
       }
 
       return Card.remove(card)
         .then(() => res.send(card));
     })
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch(next);
 };
 
 const likeCard = (req, res) => {
   Card.findByIdAndUpdate(req.params.id, { $addToSet: { likes: req.user._id } }, { new: true })
-    .then((card) => {
-      if (!card) {
-        return res.status(404).send({ message: 'Карточка с таким id не найдена' });
-      }
-      return res.send({ data: card });
+    .orFail(()=>{
+      throw new NotFoundError(ITEM_NOT_FOUND);
     })
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка. Изменения не внесены.' }));
+    .then((card) => res.send({ data: card }))
+    .catch(next);
 };
 
 const dislikeCard = (req, res) => {
   Card.findByIdAndUpdate(req.params.id, { $pull: { likes: req.user._id } }, { new: true })
-    .then((card) => {
-      if (!card) {
-        return res.status(404).send({ message: 'Карточка с таким id не найдена' });
-      }
-      return res.send({ data: card });
+    .orFail(()=>{
+      throw new NotFoundError(ITEM_NOT_FOUND);
     })
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка. Изменения не внесены.' }));
+    .then((card) => res.send({ data: card }))
+    .catch(next);
 };
 
 module.exports = {
