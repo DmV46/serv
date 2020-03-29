@@ -1,15 +1,15 @@
 const Card = require('../models/card');
 const { NotFoundError, ForbiddenError } = require('../errors/NotFoundError');
-const { ITEM_NOT_FOUND, FORBIDDEN_ERROR } = require('../configuration/constants')
+const { ITEM_NOT_FOUND, FORBIDDEN_ERROR } = require('../configuration/constants');
 
-const getCards = (req, res) => {
+const getCards = (req, res, next) => {
   Card.find({})
     .populate(['owner', 'likes'])
     .then((cards) => res.send({ data: cards }))
     .catch(next);
 };
 
-const createCard = (req, res) => {
+const createCard = (req, res, next) => {
   const { name, link } = req.body;
 
   Card.create({ name, link, owner: req.user })
@@ -17,7 +17,7 @@ const createCard = (req, res) => {
     .catch(next);
 };
 
-const deleteCard = (req, res) => {
+const deleteCard = (req, res, next) => {
   const { id } = req.params;
   Card.findById({ _id: id })
     .then((card) => {
@@ -35,18 +35,18 @@ const deleteCard = (req, res) => {
     .catch(next);
 };
 
-const likeCard = (req, res) => {
+const likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(req.params.id, { $addToSet: { likes: req.user._id } }, { new: true })
-    .orFail(()=>{
+    .orFail(() => {
       throw new NotFoundError(ITEM_NOT_FOUND);
     })
     .then((card) => res.send({ data: card }))
     .catch(next);
 };
 
-const dislikeCard = (req, res) => {
+const dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(req.params.id, { $pull: { likes: req.user._id } }, { new: true })
-    .orFail(()=>{
+    .orFail(() => {
       throw new NotFoundError(ITEM_NOT_FOUND);
     })
     .then((card) => res.send({ data: card }))

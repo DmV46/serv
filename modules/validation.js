@@ -1,19 +1,27 @@
 const { celebrate, Joi } = require('celebrate');
+Joi.objectId = require('joi-objectid')(Joi);
 
-const CheckLogin = celebrate({
+// //////////////////////////////////
+// /                              ///
+// /        Validation User       ///
+// /                              ///
+// //////////////////////////////////
+
+
+const checkLogin = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required().min(8),
   }),
 });
 
-const CheckUserId = celebrate({
+const checkId = celebrate({
   params: Joi.object().keys({
     id: Joi.string().alphanum().length(24),
   }),
 });
 
-const CheckCreateUser = celebrate({
+const checkUser = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
     about: Joi.string().required().min(2).max(30),
@@ -23,4 +31,35 @@ const CheckCreateUser = celebrate({
   }),
 });
 
-module.exports = { CheckUserId, CheckCreateUser, CheckLogin };
+const checkProfile = celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().required().min(2).max(30),
+    about: Joi.string().required().min(2).max(30),
+  }),
+});
+
+const checkAvatar = celebrate({
+  body: Joi.object().keys({
+    avatar: Joi.string().required().uri(),
+  }),
+});
+
+// //////////////////////////////////
+// /                              ///
+// /        Validation Card       ///
+// /                              ///
+// //////////////////////////////////
+
+const checkCard = celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().required().min(2).max(30),
+    link: Joi.string().required().uri(),
+    owner: Joi.objectId().required(),
+    likes: Joi.array().items(Joi.objectId()),
+    createAt: Joi.date(),
+  }),
+});
+
+module.exports = {
+  checkId, checkUser, checkLogin, checkProfile, checkAvatar, checkCard,
+};
