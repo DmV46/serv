@@ -4,8 +4,8 @@
   "description": "project12",
   "main": "app.js",
   "scripts": {
-    "start": "NODE_ENV=production node app.js",
-    "dev": "NODE_ENV=development nodemon app.js",
+    "start": "node app.js",
+    "dev": "nodemon app.js",
     "eslint": "eslint --ext=.js ./"
   },
   "author": "Dmitry Volodin",
@@ -29,7 +29,7 @@
   "devDependencies": {
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-import": "^2.20.0",
     "nodemon": "^2.0.2"
   },
   "repository": {
