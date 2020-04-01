@@ -1,5 +1,5 @@
-# Express
-## Sprint 12
+# Learning express
+## Backend develop
 
 This is a training project designed to backend developing.
 - developer - Volodin Dmitry;
