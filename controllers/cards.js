@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 const Card = require('../models/card');
 const { NotFoundError, ForbiddenError } = require('../errors/NotFoundError');
 const { ITEM_NOT_FOUND, FORBIDDEN_ERROR } = require('../configuration/constants');
@@ -11,7 +12,7 @@ const getCards = (req, res, next) => {
 
 const createCard = (req, res, next) => {
   const { name, link } = req.body;
-
+  console.log(req.user);
   Card.create({ name, link, owner: req.user })
     .then((card) => res.send({ data: card }))
     .catch(next);

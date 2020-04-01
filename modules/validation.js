@@ -1,5 +1,4 @@
 const { celebrate, Joi } = require('celebrate');
-Joi.objectId = require('joi-objectid')(Joi);
 
 // //////////////////////////////////
 // /                              ///
@@ -54,9 +53,6 @@ const checkCard = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
     link: Joi.string().required().uri(),
-    owner: Joi.objectId().required(),
-    likes: Joi.array().items(Joi.objectId()),
-    createAt: Joi.date(),
   }),
 });
 
