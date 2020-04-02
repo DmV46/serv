@@ -1,9 +1,11 @@
-# Express
-## Sprint 12
+# Learning express
+## Backend develop
 
 This is a training project designed to backend developing.
 - developer - Volodin Dmitry;
-- version - [v0.2.0](https://dmv46.github.io/serv/);
+- version - [v0.3.1](https://dmv46.github.io/serv/);
+- domain [URL](https://dmvmesto-app.ml)
+- subdomain - API [URL](https://api.dmvmesto-app.ml)
 
 ### Beginning of work
 

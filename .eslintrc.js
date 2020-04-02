@@ -6,7 +6,7 @@ module.exports = {
     "es6": true
   },
   "rules": {
-
+    "no-underscore-dangle": ["error", { "allow": ["_id"] }],
   },
   "extends": "airbnb-base"
 }
